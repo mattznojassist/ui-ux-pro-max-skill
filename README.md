@@ -300,6 +300,26 @@ uipro init --ai claude --global   # Install to ~/.claude/skills/
 uipro init --ai cursor --global   # Install to ~/.cursor/skills/
 ```
 
+### Using OpenClaw
+
+OpenClaw can use this repo in two safe ways without changing the Claude bundle layout:
+
+1. **As a Claude bundle plugin** — OpenClaw detects `.claude-plugin/plugin.json` and loads the bundled skill content.
+   ```bash
+   git clone https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
+   openclaw plugins install ./ui-ux-pro-max-skill
+   openclaw gateway restart
+   ```
+2. **As a workspace skill** — copy the skill plus `data/` and `scripts/` into your workspace `skills/ui-ux-pro-max/` folder.
+
+For OpenClaw workspace skills, use:
+
+```bash
+python3 {baseDir}/scripts/search.py "<query>" --design-system
+```
+
+This repo also ships an OpenClaw reference config at `src/ui-ux-pro-max/templates/platforms/openclaw.json`.
+
 ### Other CLI Commands
 
 ```bash
@@ -333,7 +353,7 @@ winget install Python.Python.3.12
 
 ### Skill Mode (Auto-activate)
 
-**Supported:** Claude Code, Cursor, Windsurf, Antigravity, Codex CLI, Continue, Gemini CLI, OpenCode, Qoder, CodeBuddy, Droid (Factory), KiloCode, Warp, Augment
+**Supported:** Claude Code, Cursor, Windsurf, Antigravity, Codex CLI, Continue, Gemini CLI, OpenClaw, OpenCode, Qoder, CodeBuddy, Droid (Factory), KiloCode, Warp, Augment
 
 The skill activates automatically when you request UI/UX work. Just chat naturally:
 

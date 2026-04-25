@@ -105,6 +105,16 @@ function renderFrontmatter(frontmatter: Record<string, string> | null): string {
 
   const lines = ['---'];
   for (const [key, value] of Object.entries(frontmatter)) {
+    const trimmed = value.trim();
+    const isRawJsonObject =
+      (trimmed.startsWith('{') && trimmed.endsWith('}')) ||
+      (trimmed.startsWith('[') && trimmed.endsWith(']'));
+
+    if (isRawJsonObject) {
+      lines.push(`${key}: ${value}`);
+      continue;
+    }
+
     // Quote values that contain special characters
     if (value.includes(':') || value.includes('"') || value.includes('\n')) {
       lines.push(`${key}: "${value.replace(/"/g, '\\"')}"`);
