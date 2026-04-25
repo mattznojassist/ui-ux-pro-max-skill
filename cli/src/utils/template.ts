@@ -13,6 +13,7 @@ export interface PlatformConfig {
   installType: 'full' | 'reference';
   folderStructure: {
     root: string;
+    globalRoot?: string;
     skillPath: string;
     filename: string;
   };
@@ -39,6 +40,7 @@ const AI_TO_PLATFORM: Record<string, string> = {
   codex: 'codex',
   qoder: 'qoder',
   gemini: 'gemini',
+  openclaw: 'openclaw',
   trae: 'trae',
   continue: 'continue',
   codebuddy: 'codebuddy',
@@ -156,7 +158,7 @@ export async function renderSkillFile(config: PlatformConfig, isGlobal = false):
 
   // For global install, rewrite relative script paths to absolute ~/root/ paths
   if (isGlobal) {
-    const globalPrefix = `~/${config.folderStructure.root}/`;
+    const globalPrefix = `~/${config.folderStructure.globalRoot ?? config.folderStructure.root}/`;
     content = content.replace(
       /python3 skills\//g,
       `python3 ${globalPrefix}skills/`
@@ -206,9 +208,13 @@ export async function generatePlatformFiles(
   const effectiveDir = isGlobal ? homedir() : targetDir;
 
   // Determine full skill directory path
+  const rootDir = isGlobal && config.folderStructure.globalRoot
+    ? config.folderStructure.globalRoot
+    : config.folderStructure.root;
+
   const skillDir = join(
     effectiveDir,
-    config.folderStructure.root,
+    rootDir,
     config.folderStructure.skillPath
   );
 
@@ -219,7 +225,7 @@ export async function generatePlatformFiles(
   const skillContent = await renderSkillFile(config, isGlobal);
   const skillFilePath = join(skillDir, config.folderStructure.filename);
   await writeFile(skillFilePath, skillContent, 'utf-8');
-  createdFolders.push(config.folderStructure.root);
+  createdFolders.push(rootDir);
 
   // Copy data and scripts into the skill directory (self-contained)
   await copyDataAndScripts(skillDir);

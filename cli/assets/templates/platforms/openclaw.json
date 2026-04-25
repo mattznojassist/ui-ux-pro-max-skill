@@ -5,7 +5,8 @@
   "folderStructure": {
     "root": "skills",
     "skillPath": "ui-ux-pro-max",
-    "filename": "SKILL.md"
+    "filename": "SKILL.md",
+    "globalRoot": ".openclaw/skills"
   },
   "scriptPath": "{baseDir}/scripts/search.py",
   "frontmatter": {

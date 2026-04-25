@@ -40,6 +40,9 @@ export function detectAIType(cwd: string = process.cwd()): DetectionResult {
   if (existsSync(join(cwd, '.gemini'))) {
     detected.push('gemini');
   }
+  if (existsSync(join(cwd, '.openclaw')) || existsSync(join(cwd, 'skills'))) {
+    detected.push('openclaw');
+  }
   if (existsSync(join(cwd, '.trae'))) {
     detected.push('trae');
   }
@@ -98,6 +101,8 @@ export function getAITypeDescription(aiType: AIType): string {
       return 'Qoder (.qoder/skills/)';
     case 'gemini':
       return 'Gemini CLI (.gemini/skills/)';
+    case 'openclaw':
+      return 'OpenClaw (skills/ or ~/.openclaw/skills/)';
     case 'trae':
       return 'Trae (.trae/skills/)';
     case 'opencode':

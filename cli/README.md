@@ -22,10 +22,19 @@ uipro init --ai codex       # Codex (Skills)
 uipro init --ai roocode     # Roo Code
 uipro init --ai qoder       # Qoder
 uipro init --ai gemini      # Gemini CLI
+uipro init --ai openclaw    # OpenClaw
 uipro init --ai trae        # Trae
 uipro init --ai opencode    # OpenCode
 uipro init --ai continue    # Continue (Skills)
+uipro init --ai codebuddy   # CodeBuddy
+uipro init --ai droid       # Droid (Factory)
+uipro init --ai kilocode    # KiloCode
+uipro init --ai warp        # Warp
+uipro init --ai augment     # Augment
 uipro init --ai all         # All assistants
+
+# Global install
+uipro init --ai openclaw --global # Install to ~/.openclaw/skills/
 
 # Options
 uipro init --offline        # Skip GitHub download, use bundled assets only
@@ -38,9 +47,9 @@ uipro update                # Update to latest version
 
 ## How It Works
 
-By default, `uipro init` tries to download the latest release from GitHub to ensure you get the most up-to-date version. If the download fails (network error, rate limit), it automatically falls back to the bundled assets included in the CLI package.
+`uipro init` generates skill files from the bundled templates that ship with the CLI package. This keeps installs deterministic and makes OpenClaw support work without any extra download step.
 
-Use `--offline` to skip the GitHub download and use bundled assets directly.
+OpenClaw installs target either `./skills/ui-ux-pro-max/` or `~/.openclaw/skills/ui-ux-pro-max/` in global mode. The `--offline` flag is kept for compatibility and preserves fully local installs.
 
 ## Development
 

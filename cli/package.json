@@ -1,7 +1,7 @@
 {
   "name": "uipro-cli",
   "version": "2.5.0",
-  "description": "CLI to install UI/UX Pro Max skill for AI coding assistants",
+  "description": "CLI to install UI/UX Pro Max skill for AI coding assistants, including OpenClaw",
   "type": "module",
   "bin": {
     "uipro": "./dist/index.js"
@@ -29,7 +29,8 @@
     "codex",
     "qoder",
     "ai",
-    "skill"
+    "skill",
+    "openclaw"
   ],
   "author": "",
   "license": "MIT",

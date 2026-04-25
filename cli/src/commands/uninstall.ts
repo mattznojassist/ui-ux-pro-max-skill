@@ -17,16 +17,23 @@ interface UninstallOptions {
 /**
  * Remove skill directory for a given AI type
  */
-async function removeSkillDir(baseDir: string, aiType: Exclude<AIType, 'all'>): Promise<string[]> {
-  const folders = AI_FOLDERS[aiType];
+async function removeSkillDir(baseDir: string, aiType: Exclude<AIType, 'all'>, isGlobal = false): Promise<string[]> {
   const removed: string[] = [];
 
-  for (const folder of folders) {
-    const skillDir = join(baseDir, folder, 'skills', 'ui-ux-pro-max');
+  const installPaths = aiType === 'openclaw'
+    ? (isGlobal
+      ? [{ path: join(baseDir, '.openclaw', 'skills', 'ui-ux-pro-max'), label: '.openclaw/skills/ui-ux-pro-max' }]
+      : [{ path: join(baseDir, 'skills', 'ui-ux-pro-max'), label: 'skills/ui-ux-pro-max' }])
+    : AI_FOLDERS[aiType].map(folder => ({
+        path: join(baseDir, folder, 'skills', 'ui-ux-pro-max'),
+        label: `${folder}/skills/ui-ux-pro-max`,
+      }));
+
+  for (const entry of installPaths) {
     try {
-      await stat(skillDir);
-      await rm(skillDir, { recursive: true, force: true });
-      removed.push(`${folder}/skills/ui-ux-pro-max`);
+      await stat(entry.path);
+      await rm(entry.path, { recursive: true, force: true });
+      removed.push(entry.label);
     } catch (err: unknown) {
       // Skip non-existent dirs; re-throw permission or other errors
       if ((err as NodeJS.ErrnoException).code !== 'ENOENT') throw err;
@@ -101,11 +108,11 @@ export async function uninstallCommand(options: UninstallOptions): Promise<void>
     if (aiType === 'all') {
       // Remove for all detected platforms
       for (const type of initialDetected) {
-        const removed = await removeSkillDir(baseDir, type);
+        const removed = await removeSkillDir(baseDir, type, isGlobal);
         allRemoved.push(...removed);
       }
     } else {
-      const removed = await removeSkillDir(baseDir, aiType);
+      const removed = await removeSkillDir(baseDir, aiType, isGlobal);
       allRemoved.push(...removed);
     }
 

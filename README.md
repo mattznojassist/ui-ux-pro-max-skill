@@ -282,6 +282,7 @@ uipro init --ai codex       # Codex CLI
 uipro init --ai qoder       # Qoder
 uipro init --ai roocode     # Roo Code
 uipro init --ai gemini      # Gemini CLI
+uipro init --ai openclaw    # OpenClaw
 uipro init --ai trae        # Trae
 uipro init --ai opencode    # OpenCode
 uipro init --ai continue    # Continue
@@ -298,27 +299,31 @@ uipro init --ai all         # All assistants
 ```bash
 uipro init --ai claude --global   # Install to ~/.claude/skills/
 uipro init --ai cursor --global   # Install to ~/.cursor/skills/
+uipro init --ai openclaw --global # Install to ~/.openclaw/skills/
 ```
 
 ### Using OpenClaw
 
-OpenClaw can use this repo in two safe ways without changing the Claude bundle layout:
-
-1. **As a Claude bundle plugin** — OpenClaw detects `.claude-plugin/plugin.json` and loads the bundled skill content.
-   ```bash
-   git clone https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
-   openclaw plugins install ./ui-ux-pro-max-skill
-   openclaw gateway restart
-   ```
-2. **As a workspace skill** — copy the skill plus `data/` and `scripts/` into your workspace `skills/ui-ux-pro-max/` folder.
-
-For OpenClaw workspace skills, use:
+OpenClaw is now wired into `uipro-cli` as a first-class platform:
 
 ```bash
-python3 {baseDir}/scripts/search.py "<query>" --design-system
+# From your OpenClaw workspace root
+uipro init --ai openclaw
+
+# Optional: install as a shared personal skill
+uipro init --ai openclaw --global
 ```
 
-This repo also ships an OpenClaw reference config at `src/ui-ux-pro-max/templates/platforms/openclaw.json`.
+- `uipro init --ai openclaw` installs to `./skills/ui-ux-pro-max/`
+- `uipro init --ai openclaw --global` installs to `~/.openclaw/skills/ui-ux-pro-max/`
+
+OpenClaw can also use this repo as a bundle plugin without changing the Claude bundle layout:
+
+```bash
+git clone https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
+openclaw plugins install ./ui-ux-pro-max-skill
+openclaw gateway restart
+```
 
 ### Other CLI Commands
 
@@ -417,23 +422,27 @@ Just mention your preferred stack in the prompt, or let it default to HTML + Tai
 
 For direct access to the design system generator:
 
-> Note: If you installed via Continue, replace `.claude/skills/` with `.continue/skills/` in the commands below. For Droid (Factory), use `.factory/skills/`.
+> Replace `<skill-root>` with the right install path for your assistant:
+> - Claude Code: `.claude/skills`
+> - OpenClaw: `skills`
+> - Continue: `.continue/skills`
+> - Droid (Factory): `.factory/skills`
 
 ```bash
 # Generate design system with ASCII output
-python3 .claude/skills/ui-ux-pro-max/scripts/search.py "beauty spa wellness" --design-system -p "Serenity Spa"
+python3 <skill-root>/ui-ux-pro-max/scripts/search.py "beauty spa wellness" --design-system -p "Serenity Spa"
 
 # Generate with Markdown output
-python3 .claude/skills/ui-ux-pro-max/scripts/search.py "fintech banking" --design-system -f markdown
+python3 <skill-root>/ui-ux-pro-max/scripts/search.py "fintech banking" --design-system -f markdown
 
 # Domain-specific search
-python3 .claude/skills/ui-ux-pro-max/scripts/search.py "glassmorphism" --domain style
-python3 .claude/skills/ui-ux-pro-max/scripts/search.py "elegant serif" --domain typography
-python3 .claude/skills/ui-ux-pro-max/scripts/search.py "dashboard" --domain chart
+python3 <skill-root>/ui-ux-pro-max/scripts/search.py "glassmorphism" --domain style
+python3 <skill-root>/ui-ux-pro-max/scripts/search.py "elegant serif" --domain typography
+python3 <skill-root>/ui-ux-pro-max/scripts/search.py "dashboard" --domain chart
 
 # Stack-specific guidelines
-python3 .claude/skills/ui-ux-pro-max/scripts/search.py "form validation" --stack react
-python3 .claude/skills/ui-ux-pro-max/scripts/search.py "responsive layout" --stack html-tailwind
+python3 <skill-root>/ui-ux-pro-max/scripts/search.py "form validation" --stack react
+python3 <skill-root>/ui-ux-pro-max/scripts/search.py "responsive layout" --stack html-tailwind
 ```
 
 ### Persist Design System (Master + Overrides Pattern)
@@ -442,10 +451,10 @@ Save your design system to files for **hierarchical retrieval across sessions**:
 
 ```bash
 # Generate and persist to design-system/MASTER.md
-python3 .claude/skills/ui-ux-pro-max/scripts/search.py "SaaS dashboard" --design-system --persist -p "MyApp"
+python3 <skill-root>/ui-ux-pro-max/scripts/search.py "SaaS dashboard" --design-system --persist -p "MyApp"
 
 # Also create a page-specific override file
-python3 .claude/skills/ui-ux-pro-max/scripts/search.py "SaaS dashboard" --design-system --persist -p "MyApp" --page "dashboard"
+python3 <skill-root>/ui-ux-pro-max/scripts/search.py "SaaS dashboard" --design-system --persist -p "MyApp" --page "dashboard"
 ```
 
 This creates a `design-system/` folder structure:
@@ -477,7 +486,7 @@ Now, generate the code...
 
 The codebase has been restructured to use a **template-based generation system**. All platform-specific files (`.cursor/`, `.windsurf/`, `.kiro/`, `.factory/`, etc.) are now generated dynamically by the CLI.
 
-**Always use the CLI to install:**
+**Prefer the CLI for assistants it supports (including OpenClaw):**
 
 ```bash
 npm install -g uipro-cli
